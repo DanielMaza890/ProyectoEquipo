@@ -1,0 +1,119 @@
+{% extends 'becas/base.html' %}
+{% block title %}Detalle de Solicitud{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4><i class="fas fa-file-alt me-2 text-primary"></i>Solicitud #{{ solicitud.id|stringformat:"06d" }}</h4>
+            <a href="{% url 'panel_admin' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Volver
+            </a>
+        </div>
+
+        <!-- Puntaje destacado -->
+        <div class="card mb-4 text-center p-4
+            {% if solicitud.estado == 'aprobada' %}border-success
+            {% elif solicitud.estado == 'rechazada' %}border-danger
+            {% else %}border-warning{% endif %}">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <div class="display-3 fw-bold
+                        {% if solicitud.puntaje >= 70 %}text-success
+                        {% elif solicitud.puntaje >= 50 %}text-warning
+                        {% else %}text-danger{% endif %}">
+                        {{ solicitud.puntaje }}
+                    </div>
+                    <div class="text-muted">Puntaje / 100</div>
+                </div>
+                <div class="col-md-4">
+                    <div class="display-6">
+                        {% if solicitud.estado == 'aprobada' %}✅
+                        {% elif solicitud.estado == 'rechazada' %}❌
+                        {% else %}⏳{% endif %}
+                    </div>
+                    <div class="fs-5 fw-bold">{{ solicitud.get_estado_display }}</div>
+                </div>
+                <div class="col-md-4">
+                    <div class="display-6 fw-bold text-info">{{ solicitud.promedio }}</div>
+                    <div class="text-muted">Promedio</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos de la solicitud -->
+        <div class="card mb-4">
+            <div class="card-header"><i class="fas fa-user me-2"></i>Datos Personales</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-2"><strong>Nombre:</strong> {{ solicitud.nombre_completo }}</div>
+                    <div class="col-md-6 mb-2"><strong>CURP:</strong> {{ solicitud.curp }}</div>
+                    <div class="col-md-6 mb-2"><strong>Fecha de Nacimiento:</strong> {{ solicitud.fecha_nacimiento }}</div>
+                    <div class="col-md-6 mb-2"><strong>Email:</strong> {{ solicitud.email }}</div>
+                    <div class="col-md-6 mb-2"><strong>Teléfono:</strong> {{ solicitud.telefono }}</div>
+                    <div class="col-12 mb-2"><strong>Dirección:</strong> {{ solicitud.direccion }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header"><i class="fas fa-book me-2"></i>Datos Académicos</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-2"><strong>Nivel:</strong> {{ solicitud.get_nivel_estudio_display }}</div>
+                    <div class="col-md-4 mb-2"><strong>Promedio:</strong> {{ solicitud.promedio }}</div>
+                    <div class="col-md-4 mb-2"><strong>Semestre:</strong> {{ solicitud.semestre_actual }}</div>
+                    <div class="col-12 mb-2"><strong>Institución:</strong> {{ solicitud.institucion }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header"><i class="fas fa-home me-2"></i>Datos Socioeconómicos</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-2"><strong>Ingreso Familiar:</strong> ${{ solicitud.ingreso_familiar_mensual }}</div>
+                    <div class="col-md-4 mb-2"><strong>Dependientes:</strong> {{ solicitud.numero_dependientes }}</div>
+                    <div class="col-md-4 mb-2"><strong>¿Trabaja?:</strong>
+                        {% if solicitud.trabaja_actualmente %}Sí{% else %}No{% endif %}
+                    </div>
+                    <div class="col-12 mb-2"><strong>Tipo de Beca:</strong> {{ solicitud.get_tipo_beca_display }}</div>
+                    <div class="col-12"><strong>Motivo:</strong> {{ solicitud.motivo }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones del admin -->
+        {% if solicitud.estado == 'pendiente' %}
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark"><i class="fas fa-gavel me-2"></i>Tomar Decisión</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Observaciones (opcional)</label>
+                        <textarea name="observaciones" class="form-control" rows="3"
+                            placeholder="Agrega comentarios sobre la decisión..."></textarea>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <button type="submit" name="accion" value="aprobada" class="btn btn-success btn-lg flex-fill">
+                            <i class="fas fa-check me-2"></i>APROBAR BECA
+                        </button>
+                        <button type="submit" name="accion" value="rechazada" class="btn btn-danger btn-lg flex-fill">
+                            <i class="fas fa-times me-2"></i>RECHAZAR BECA
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-header"><i class="fas fa-comment me-2"></i>Observaciones del Administrador</div>
+            <div class="card-body">
+                <p>{{ solicitud.observaciones_admin|default:"Sin observaciones." }}</p>
+                <small class="text-muted">Procesado el {{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</small>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

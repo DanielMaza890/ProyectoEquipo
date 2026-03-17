@@ -1,0 +1,139 @@
+{% extends 'becas/base.html' %}
+{% block title %}Panel de Administración{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3><i class="fas fa-cogs me-2 text-primary"></i>Panel de Administración</h3>
+    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalMasivo">
+        <i class="fas fa-bolt me-1"></i>Procesamiento Masivo
+    </button>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Estado</label>
+                {{ form_filtro.estado }}
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Tipo de Beca</label>
+                {{ form_filtro.tipo_beca }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Buscar</label>
+                {{ form_filtro.buscar }}
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-1"></i>Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-list me-2"></i>Solicitudes</span>
+        <span class="badge bg-light text-dark">{{ total_filtradas }} registros</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Folio</th>
+                        <th>Nombre</th>
+                        <th>CURP</th>
+                        <th>Tipo Beca</th>
+                        <th>Promedio</th>
+                        <th>Puntaje</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in solicitudes %}
+                    <tr>
+                        <td><span class="badge bg-secondary">#{{ s.id|stringformat:"06d" }}</span></td>
+                        <td><strong>{{ s.nombre_completo }}</strong></td>
+                        <td><small class="text-muted">{{ s.curp }}</small></td>
+                        <td>{{ s.get_tipo_beca_display }}</td>
+                        <td>{{ s.promedio }}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-1">
+                                <div class="progress flex-grow-1" style="height: 8px; min-width: 60px;">
+                                    <div class="progress-bar
+                                        {% if s.puntaje >= 70 %}bg-success
+                                        {% elif s.puntaje >= 50 %}bg-warning
+                                        {% else %}bg-danger{% endif %}"
+                                        style="width: {{ s.puntaje }}%">
+                                    </div>
+                                </div>
+                                <small>{{ s.puntaje }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            {% if s.estado == 'aprobada' %}
+                                <span class="badge bg-success">Aprobada</span>
+                            {% elif s.estado == 'rechazada' %}
+                                <span class="badge bg-danger">Rechazada</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Pendiente</span>
+                            {% endif %}
+                        </td>
+                        <td><small>{{ s.fecha_solicitud|date:"d/m/Y" }}</small></td>
+                        <td>
+                            <a href="{% url 'detalle_solicitud' s.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted">
+                            <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
+                            No hay solicitudes que coincidan con los filtros.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Procesamiento Masivo -->
+<div class="modal fade" id="modalMasivo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-bolt me-2"></i>Procesamiento Masivo Automático</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'procesar_masivo' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Esta acción procesará <strong>todas las solicitudes pendientes</strong> automáticamente.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Puntaje mínimo para aprobación</label>
+                        <input type="number" name="umbral" value="60" min="0" max="100" class="form-control">
+                        <div class="form-text">Las solicitudes con puntaje mayor o igual al umbral serán aprobadas.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-play me-1"></i>Procesar Ahora
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

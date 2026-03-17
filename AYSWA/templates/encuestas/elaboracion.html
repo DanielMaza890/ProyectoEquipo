@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Elaboración</title>
+    <link rel="stylesheet" href="{% static 'diseno.css' %}">    
+</head>
+<body>
+
+<header>
+    <div class="logo">Sistema de Encuestas</div>
+    <nav>
+        <a href="{% url 'encuestas:registro' %}" class="active">Registro</a>
+        <a href="{% url 'encuestas:elaboracion' %}">Elaboración</a>
+        <a href="{% url 'encuestas:reporte' %}">Reporte</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>Elaboración de Encuestas</h1>
+    <p class="subtitle">Crea y edita las preguntas que necesites</p>
+
+    <div id="questions">
+ <!-- las preguntas se generan aquí -->
+    </div>
+
+    <div class="add-question">
+        <input type="text" id="new-question" placeholder="Escribe una nueva pregunta...">
+        <button id="add-btn" class="boton_agrega"> Agregar</button>
+    </div>
+
+    <button id="save-btn" class="btn_encuesta"> Guardar Encuesta</button>
+</div>
+
+<script src="{% static 'funcion.js' %}"></script>
+</body>
+</html>

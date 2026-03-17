@@ -1,0 +1,129 @@
+{% extends 'becas/base.html' %}
+{% block title %}Solicitar Beca{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header py-3">
+                <h4 class="mb-0"><i class="fas fa-file-alt me-2"></i>Formulario de Solicitud de Beca</h4>
+                <small>Completa todos los campos obligatorios (*)</small>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <!-- Datos Personales -->
+                    <div class="mb-4">
+                        <h5 class="text-primary border-bottom pb-2"><i class="fas fa-user me-2"></i>Datos Personales</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Nombre(s) *</label>
+                                {{ form.nombre }}
+                                {% if form.nombre.errors %}<div class="text-danger small">{{ form.nombre.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Apellido Paterno *</label>
+                                {{ form.apellido_paterno }}
+                                {% if form.apellido_paterno.errors %}<div class="text-danger small">{{ form.apellido_paterno.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Apellido Materno *</label>
+                                {{ form.apellido_materno }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">CURP *</label>
+                                {{ form.curp }}
+                                {% if form.curp.errors %}<div class="text-danger small">{{ form.curp.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Fecha de Nacimiento *</label>
+                                {{ form.fecha_nacimiento }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Teléfono *</label>
+                                {{ form.telefono }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Correo Electrónico *</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}<div class="text-danger small">{{ form.email.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Dirección *</label>
+                                {{ form.direccion }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Datos Académicos -->
+                    <div class="mb-4">
+                        <h5 class="text-primary border-bottom pb-2"><i class="fas fa-book me-2"></i>Datos Académicos</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Nivel de Estudio *</label>
+                                {{ form.nivel_estudio }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Promedio *</label>
+                                {{ form.promedio }}
+                                {% if form.promedio.errors %}<div class="text-danger small">{{ form.promedio.errors }}</div>{% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Semestre / Grado Actual *</label>
+                                {{ form.semestre_actual }}
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">Institución Educativa *</label>
+                                {{ form.institucion }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Datos Socioeconómicos -->
+                    <div class="mb-4">
+                        <h5 class="text-primary border-bottom pb-2"><i class="fas fa-home me-2"></i>Datos Socioeconómicos</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Ingreso Familiar Mensual ($) *</label>
+                                {{ form.ingreso_familiar_mensual }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Núm. de Dependientes en el Hogar *</label>
+                                {{ form.numero_dependientes }}
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end pb-2">
+                                <div class="form-check">
+                                    {{ form.trabaja_actualmente }}
+                                    <label class="form-check-label fw-semibold ms-2">¿Trabaja actualmente?</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tipo de Beca -->
+                    <div class="mb-4">
+                        <h5 class="text-primary border-bottom pb-2"><i class="fas fa-award me-2"></i>Solicitud de Beca</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Tipo de Beca *</label>
+                                {{ form.tipo_beca }}
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">Motivo de la Solicitud *</label>
+                                {{ form.motivo }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-paper-plane me-2"></i>Enviar Solicitud
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-secondary btn-lg ms-3">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

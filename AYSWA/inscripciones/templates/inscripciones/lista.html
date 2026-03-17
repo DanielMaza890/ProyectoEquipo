@@ -1,0 +1,43 @@
+<h1>Lista de Inscripciones</h1>
+
+<a href="{% url 'registrar' %}">Registrar nueva inscripción</a>
+
+<br><br>
+<br>
+<a href="/chat/" 
+   style="background-color:#28a745;
+          color:white;
+          padding:8px 15px;
+          text-decoration:none;
+          border-radius:5px;">
+   Ir al Chat
+</a>
+<br><br>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Alumno</th>
+        <th>Correo</th>
+        <th>Curso</th>
+        <th>Avance</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for inscripcion in inscripciones %}
+    <tr>
+        <td>{{ inscripcion.alumno.nombre }}</td>
+        <td>{{ inscripcion.alumno.correo }}</td>
+        <td>{{ inscripcion.curso }}</td>
+        <td>{{ inscripcion.avance }}%</td>
+        <td>
+            <a href="{% url 'modificar' inscripcion.id %}">Modificar</a> |
+            <a href="{% url 'eliminar' inscripcion.id %}">Eliminar</a> |
+            <a href="{% url 'avance' inscripcion.id %}">Ver Avance</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">No hay inscripciones registradas</td>
+    </tr>
+    {% endfor %}
+</table>

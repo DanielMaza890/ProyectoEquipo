@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Historial de Pagos</title>
+</head>
+<body>
+    <h1>Historial de Pagos</h1>
+    <ul>
+        {% for pago in pagos %}
+            <li>{{ pago.alumno.nombre }} - {{ pago.concepto }} - ${{ pago.monto }} - {{ pago.fecha }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

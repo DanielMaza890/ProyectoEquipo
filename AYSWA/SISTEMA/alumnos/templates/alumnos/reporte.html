@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas Escolares</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white text-center">
+                <h2 class="mb-0">Panel de Control Académico</h2>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted text-center">Resumen estadístico basado en <strong>{{ total }}</strong> alumnos inscritos.</p>
+                
+                <div class="row g-4 mt-2">
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-white shadow-sm text-center">
+                            <h4 class="text-danger">Índice de Reprobación</h4>
+                            <p class="display-3 fw-bold">{{ p_reprobados|floatformat:1 }}%</p>
+                            <span class="badge bg-danger">{{ reprobados }} alumnos con nota menor a 70</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-white shadow-sm text-center">
+                            <h4 class="text-warning text-dark">Índice de Deserción</h4>
+                            <p class="display-3 fw-bold text-dark">{{ p_desercion|floatformat:1 }}%</p>
+                            <span class="badge bg-warning text-dark">{{ desertores }} bajas registradas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-center text-muted">
+                Proyecto de Estadísticas Escolares - Luis Miguel
+            </div>
+        </div>
+    </div>
+</body>
+</html>

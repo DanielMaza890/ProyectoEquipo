@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Inscripciones</title>
+</head>
+<body>
+    <h1>Inscripciones</h1>
+
+    <a href="{% url 'registrar' %}">Nueva Inscripción</a>
+    <br><br>
+
+    <table border="1">
+        <tr>
+            <th>Alumno</th>
+            <th>Curso</th>
+            <th>Avance</th>
+            <th>Acciones</th>
+        </tr>
+
+        {% for i in inscripciones %}
+        <tr>
+            <td>{{ i.alumno.nombre }}</td>
+            <td>{{ i.curso }}</td>
+            <td>{{ i.avance }}%</td>
+            <td>
+                <a href="{% url 'editar' i.id %}">Editar</a>
+                <a href="{% url 'eliminar' i.id %}">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

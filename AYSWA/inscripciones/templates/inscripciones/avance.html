@@ -1,0 +1,9 @@
+<h1>Avance del Alumno</h1>
+
+<p><strong>Alumno:</strong> {{ inscripcion.alumno.nombre }}</p>
+<p><strong>Correo:</strong> {{ inscripcion.alumno.correo }}</p>
+<p><strong>Curso:</strong> {{ inscripcion.curso }}</p>
+<p><strong>Avance:</strong> {{ inscripcion.avance }}%</p>
+
+<br>
+<a href="{% url 'lista' %}">Volver</a>

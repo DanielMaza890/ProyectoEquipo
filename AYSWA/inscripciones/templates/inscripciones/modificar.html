@@ -1,0 +1,16 @@
+<h1>Modificar Inscripción</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Curso:</label><br>
+    <input type="text" name="curso" value="{{ inscripcion.curso }}" required><br><br>
+
+    <label>Avance (%):</label><br>
+    <input type="number" name="avance" value="{{ inscripcion.avance }}" min="0" max="100" required><br><br>
+
+    <button type="submit">Actualizar</button>
+</form>
+
+<br>
+<a href="{% url 'lista' %}">Volver</a>

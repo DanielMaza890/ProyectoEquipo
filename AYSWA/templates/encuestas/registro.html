@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <link rel="stylesheet" href="{% static 'diseno.css' %}">
+</head>
+<body>
+
+{% if messages %}
+<div class="messages">
+    {% for msg in messages %}
+        <p class="message {{ msg.tags }}">{{ msg }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+<header>
+    <div class="logo">Sistema de Encuestas</div>
+    <nav>
+        <a href="{% url 'encuestas:registro' %}" class="active">Registro</a>
+        <a href="{% url 'encuestas:elaboracion' %}">Elaboración</a>
+        <a href="{% url 'encuestas:reporte' %}">Reporte</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>Registro de Participantes</h1>
+    <p class="subtitulo">Registra nuevos participantes</p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="boton_agrega">Registrar Participante</button>
+    </form>
+</div>
+
+<script src="{% static 'funcion.js' %}"></script>
+</body>
+</html>

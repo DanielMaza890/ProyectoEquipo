@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chat</title>
+<style>
+body { display:flex; font-family:Arial; margin:0; }
+.sidebar { width:30%; border-right:1px solid #ccc; height:100vh; overflow-y:auto; }
+.chat { width:70%; display:flex; flex-direction:column; height:100vh; }
+.chat-box { flex:1; padding:10px; overflow-y:auto; display:flex; flex-direction:column; }
+.mensaje { margin:5px; padding:8px; border-radius:10px; max-width:60%; }
+.mio { background:#dcf8c6; align-self:flex-end; }
+.otro { background:#eee; align-self:flex-start; }
+.input-area { display:flex; }
+input { flex:1; padding:10px; }
+button { padding:10px; }
+.contacto { padding:10px; cursor:pointer; border-bottom:1px solid #eee; }
+.contacto:hover { background:#f5f5f5; }
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="listaChats"></div>
+
+<div class="chat">
+    <div class="chat-box" id="chatBox"></div>
+
+    <!-- 🔥 FORM REAL CON CSRF -->
+    <form id="formEnviar">
+        {% csrf_token %}
+        <div class="input-area">
+            <input type="text" id="mensaje" name="mensaje">
+            <button type="submit">Enviar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+
+let usuarioSeleccionado = null;
+
+function cargarConversaciones(){
+    fetch('/chat/conversaciones/')
+    .then(res=>res.json())
+    .then(data=>{
+        let lista=document.getElementById("listaChats");
+        lista.innerHTML="";
+        data.forEach(user=>{
+            lista.innerHTML+=`
+                <div class="contacto" onclick="abrirChat(${user.id})">
+                    ${user.username}
+                </div>
+            `;
+        });
+    });
+}
+
+function abrirChat(id){
+    usuarioSeleccionado=id;
+    cargarMensajes();
+}
+
+function cargarMensajes(){
+    if(!usuarioSeleccionado)return;
+
+    fetch('/chat/mensajes/'+usuarioSeleccionado+'/')
+    .then(res=>res.json())
+    .then(data=>{
+        let chat=document.getElementById("chatBox");
+        chat.innerHTML="";
+        data.forEach(msg=>{
+            let clase=msg.mio?"mensaje mio":"mensaje otro";
+            chat.innerHTML+=`<div class="${clase}">${msg.texto}</div>`;
+        });
+        chat.scrollTop=chat.scrollHeight;
+    });
+}
+
+document.getElementById("formEnviar").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let texto=document.getElementById("mensaje").value;
+    if(!usuarioSeleccionado||texto=="")return;
+
+    let formData=new FormData();
+    formData.append("receptor_id",usuarioSeleccionado);
+    formData.append("mensaje",texto);
+
+    fetch('/chat/enviar/',{
+        method:'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body:formData
+    })
+    .then(res=>res.json())
+    .then(()=>{
+        document.getElementById("mensaje").value="";
+        cargarMensajes();
+    });
+});
+
+setInterval(cargarMensajes,2000);
+cargarConversaciones();
+
+</script>
+
+</body>
+</html>

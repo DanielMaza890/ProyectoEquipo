@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Reporte</title>
+    <link rel="stylesheet" href="{% static 'diseno.css' %}">
+    <!-- Atropos CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/atropos@2/atropos.min.css" />
+    <style>
+        /*================ Contenedor de fondo con Atropos ================ */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .atropos {
+            perspective: 1000px;
+        }
+        header {
+            position: relative;
+            z-index: 10;
+        }
+        .container {
+            position: relative;
+            z-index: 5;
+            perspective: 1000px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Sistema de Encuestas</div>
+    <nav>
+        <a href="{% url 'encuestas:registro' %}" class="active">Registro</a>
+        <a href="{% url 'encuestas:elaboracion' %}">Elaboración</a>
+        <a href="{% url 'encuestas:reporte' %}">Reporte</a>
+    </nav>
+</header>
+
+<div class="atropos container">
+    <div class="atropos-scale">
+        <div class="atropos-rotate">
+            <div class="atropos-inner">
+                <h1>Reporte de Encuestas</h1>
+                <p class="subtitulo">estadísticas</p>
+
+                <div class="cards">
+                    <div class="card card-purple">
+                        <h2>0</h2>
+                        <p>Total Participantes</p>
+                    </div>
+
+                    <div class="card card-blue">
+                        <h2>0</h2>
+                        <p>Encuestas Completadas</p>
+                    </div>
+
+                    <div class="card card-green">
+                        <h2>0%</h2>
+                        <p>Tasa de Respuesta</p>
+                    </div>
+                </div>
+
+                <p>No hay encuestas registradas aún.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'funcion.js' %}"></script>
+<!-- Atropos JS -->
+<script src="https://cdn.jsdelivr.net/npm/atropos@2/atropos.min.js"></script>
+<script>
+  // ==========================================Inicializar Atropos en el contenedor=====================?
+  setTimeout(() => {
+    const atroposContainer = Atropos({
+      el: '.container',
+      shadowScale: 30,
+      rotateTouch: false,
+      shadow: true,
+      shadowOffset: 50,
+      duration: 500,
+      space: 20
+    });
+  }, 100);
+</script>
+</body>
+</html>
