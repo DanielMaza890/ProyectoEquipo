@@ -27,6 +27,51 @@ async function loadContent() {
         }
         grid.appendChild(card);
     });
+
+    // Función para CREAR CARPETA (Corregida)
+async function createFolder() {
+    const name = prompt("Nombre de la nueva carpeta:");
+    if (!name) return;
+
+    await fetch('/api/folders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, path: currentPath }) // Enviamos la ruta actual
+    });
+    loadContent();
+}
+
+// Función para ELIMINAR
+async function deleteItem(name) {
+    if (!confirm(`¿Seguro que quieres borrar "${name}"?`)) return;
+
+    await fetch(`/api/delete?name=${encodeURIComponent(name)}&path=${encodeURIComponent(currentPath)}`, {
+        method: 'DELETE'
+    });
+    loadContent();
+}
+
+// Función para EDITAR
+async function renameItem(oldName) {
+    const newName = prompt("Nuevo nombre:", oldName);
+    if (!newName || newName === oldName) return;
+
+    await fetch('/api/rename', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oldName, newName, path: currentPath })
+    });
+    loadContent();
+}
+
+// Actualiza el dibujo de las tarjetas en loadContent:
+// (Dentro del items.forEach, agrega esto a la card)
+card.innerHTML += `
+    <div class="card-actions">
+        <button onclick="renameItem('${item.name}')">✏️</button>
+        <button onclick="deleteItem('${item.name}')">🗑️</button>
+    </div>
+`;
 }
 
 function enterFolder(folderName) {
@@ -58,6 +103,7 @@ async function uploadFile() {
     fileInput.value = ""; // Limpiamos el botón
     loadContent(); // Recargamos para ver el archivo nuevo
 }
+
 
 // Cargar todo al abrir la página
 window.onload = loadContent;
