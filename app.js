@@ -20,16 +20,22 @@ async function loadFolders() {
     });
 }
 
-// Función para CREAR
 async function createFolder() {
     const name = prompt("Nombre de la nueva carpeta:");
     if (!name) return;
-    const response = await fetch('/api/folders', {
+
+    // EL CAMBIO ESTÁ AQUÍ: Debe ser '/api/folders'
+    const response = await fetch('/api/folders', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name })
     });
-    if (response.ok) loadFolders();
+
+    if (response.ok) {
+        loadFolders(); 
+    } else {
+        alert("Error al crear la carpeta");
+    }
 }
 
 // Función para RENOMBRAR (Editar)
