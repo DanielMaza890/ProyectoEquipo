@@ -1,61 +1,49 @@
-// Función para cargar y mostrar las carpetas al abrir la página
-async function loadFolders() {
-    const response = await fetch('/api/folders');
-    const folders = await response.json();
-    const grid = document.getElementById('folder-grid');
-    grid.innerHTML = ''; 
+let currentPath = "";
 
-    folders.forEach(name => {
+async function loadContent() {
+    const response = await fetch(`/api/content?path=${currentPath}`);
+    const items = await response.json();
+    const grid = document.getElementById('folder-grid');
+    grid.innerHTML = '';
+    
+    document.getElementById('current-path-display').innerText = `Ubicación: /${currentPath}`;
+
+    items.forEach(item => {
         const card = document.createElement('div');
-        card.className = 'folder-card';
+        card.className = item.isDirectory ? 'folder-card' : 'file-card';
         card.innerHTML = `
-            <div class="folder-icon">📁</div>
-            <p>${name}</p>
-            <div class="actions">
-                <button class="edit" onclick="renameFolder('${name}')">✏️</button>
-                <button class="delete" onclick="deleteFolder('${name}')">🗑️</button>
-            </div>
+            <div style="font-size: 40px">${item.isDirectory ? '📁' : '📄'}</div>
+            <p>${item.name}</p>
         `;
+        if (item.isDirectory) {
+            card.onclick = () => enterFolder(item.name);
+        }
         grid.appendChild(card);
     });
 }
 
-async function createFolder() {
-    const name = prompt("Nombre de la nueva carpeta:");
-    if (!name) return;
+function enterFolder(name) {
+    currentPath = currentPath === "" ? name : `${currentPath}/${name}`;
+    loadContent();
+}
 
-    // EL CAMBIO ESTÁ AQUÍ: Debe ser '/api/folders'
-    const response = await fetch('/api/folders', { 
+function goBack() {
+    const parts = currentPath.split('/');
+    parts.pop();
+    currentPath = parts.join('/');
+    loadContent();
+}
+
+async function uploadFile() {
+    const fileInput = document.getElementById('fileInput');
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+
+    await fetch(`/api/upload?path=${currentPath}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name })
+        body: formData
     });
-
-    if (response.ok) {
-        loadFolders(); 
-    } else {
-        alert("Error al crear la carpeta");
-    }
+    loadContent();
 }
 
-// Función para RENOMBRAR (Editar)
-async function renameFolder(oldName) {
-    const newName = prompt("Nuevo nombre:", oldName);
-    if (!newName || newName === oldName) return;
-    const response = await fetch(`/api/folders/${oldName}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newName })
-    });
-    if (response.ok) loadFolders();
-}
-
-// Función para ELIMINAR
-async function deleteFolder(name) {
-    if (confirm(`¿Eliminar "${name}"?`)) {
-        const response = await fetch(`/api/folders/${name}`, { method: 'DELETE' });
-        if (response.ok) loadFolders();
-    }
-}
-
-window.onload = loadFolders;
+window.onload = loadContent;

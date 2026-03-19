@@ -51,4 +51,27 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     res.json({ message: 'Archivo subido' });
 });
 
+// RUTA: Eliminar (Archivo o Carpeta)
+app.delete('/api/delete', (req, res) => {
+    const { name, path: folderPath } = req.query;
+    const targetPath = path.join(DRIVE_PATH, folderPath || '', name);
+
+    if (fs.lstatSync(targetPath).isDirectory()) {
+        fs.rmSync(targetPath, { recursive: true, force: true });
+    } else {
+        fs.unlinkSync(targetPath);
+    }
+    res.json({ message: 'Eliminado correctamente' });
+});
+
+// RUTA: Editar/Renombrar
+app.put('/api/rename', (req, res) => {
+    const { oldName, newName, path: folderPath } = req.body;
+    const oldPath = path.join(DRIVE_PATH, folderPath || '', oldName);
+    const newPath = path.join(DRIVE_PATH, folderPath || '', newName);
+
+    fs.renameSync(oldPath, newPath);
+    res.json({ message: 'Renombrado correctamente' });
+});
+
 app.listen(3000, () => console.log('🚀 Drive corriendo en http://localhost:3000'));
