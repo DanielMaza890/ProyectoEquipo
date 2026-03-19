@@ -26,5 +26,24 @@
     cursor: pointer;
 }
 
+.card-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.card-actions button {
+    padding: 5px;
+    cursor: pointer;
+    border: none;
+    background: #eee;
+    border-radius: 3px;
+}
+
+.card-actions button:hover {
+    background: #ddd;
+}
+
 .folder-card:hover { background-color: #f0f7ff; }
 .file-card { background-color: #fffcf0; }
