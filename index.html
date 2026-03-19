@@ -9,8 +9,20 @@
     <div class="container">
         <header>
             <h1>Mi Drive Personal - Equipo 4</h1>
-            <button class="btn-create" onclick="createFolder()">+ Nueva Carpeta</button>
+            
+            <div class="controls">
+                <button onclick="goBack()" class="btn-secondary">⬅ Volver</button>
+                
+                <button class="btn-create" onclick="createFolder()">+ Nueva Carpeta</button>
+                
+                <label class="btn-upload">
+                    <span>+ Subir Archivo</span>
+                    <input type="file" id="fileInput" onchange="uploadFile()" style="display:none">
+                </label>
+            </div>
         </header>
+
+        <h3 id="current-path-display">Ubicación: /</h3>
 
         <div id="folder-grid" class="grid"></div>
     </div>
