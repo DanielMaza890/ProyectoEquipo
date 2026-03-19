@@ -1,23 +1,30 @@
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-upload {
+    background-color: #34a853;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 20px;
-    padding: 20px;
 }
-.folder-card {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 20px;
+
+.folder-card, .file-card {
     text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
 }
-.folder-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-    border-color: #4285f4;
-}
-.folder-icon { font-size: 50px; margin-bottom: 10px; }
-.edit { color: #f4b400; background: none; border: none; cursor: pointer; }
-.delete { color: #db4437; background: none; border: none; cursor: pointer; }
+
+.folder-card:hover { background-color: #f0f7ff; }
+.file-card { background-color: #fffcf0; }
