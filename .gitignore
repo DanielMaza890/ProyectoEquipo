@@ -1,0 +1,17 @@
+# Librerías de Node (Pesan muchísimo, se instalan con npm install)
+node_modules/
+
+# Entornos virtuales de Python (Lo que traía la carpeta del maestro)
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Base de datos local (No queremos subir datos de prueba)
+*.sqlite3
+
+# Archivos de sistema y logs
+.DS_Store
+Thumbs.db
+npm-debug.log*
+.env
